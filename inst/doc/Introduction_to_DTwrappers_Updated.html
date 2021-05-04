@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>Introduction to DTwrappers</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Introduction to DTwrappers</h1>
+
+
+
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p>As an open-source language, R has many competing methods of data processing. Selecting the preferred approach can depend on the goals of the work, the background of the practitioner, and the comparative advantages of the methods. A beginning level user of R may have to simultaneously learn about the structure of the data, new methods of analysis, and the computational tools for implementation. Coding syntax has a learning curve. The DTwrappers package can help to simplify the process of building many complex queries and data processing steps.</p>
+<p>The DTwrappers package was developed to produce wrapper functions for the data.table package. Its capabilities encompass a broad range of data processing methods. This package aims to achieve several goals:</p>
+<ol style="list-style-type: decimal">
+<li><p>Create a simplified syntax for data processing that minimizes the need for complex coding statements, all with the goal of helping beginning level R programmers learn to work with the language and to analyze data.</p></li>
+<li><p>Provide access to a wide range of data processing methods.</p></li>
+<li><p>Utilize data.table's methods in calculations to provide competitive speed and memory efficiency in analysis.</p></li>
+<li><p>Teach users the syntax of data.table's methods by providing translated coding statements for the calculations performed.</p></li>
+</ol>
+<p>While DTwrappers is intended for beginning level analysts, its methods may also be of use to experienced programmers from other languages who are new to working with R. Furthermore, the package provides translations of all of its methods into data.table's syntax, which can allow users who are learning these methods to see many working examples of coding statements.</p>
+<p>This vignette will introduce the methods of DTwrappers and provide working examples in the context of data analysis. We will primarily work with the <strong>iris</strong> data in R. The following code is used to create a new object <strong>dat</strong> that has randomly reordered the rows of the iris data.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(DTwrappers)
+<span class="kw">data</span>(iris)
+n &lt;-<span class="st"> </span><span class="kw">nrow</span>(iris)
+dt.name &lt;-<span class="st"> &quot;dat&quot;</span>
+
+<span class="kw">RNGversion</span>(<span class="dt">vstr =</span> <span class="fl">3.6</span>)
+<span class="kw">set.seed</span>(<span class="dt">seed =</span> <span class="dv">921</span>)
+
+<span class="co"># Randomizes the order of the rows.</span>
+dat &lt;-<span class="st"> </span>data.table::<span class="kw">as.data.table</span>(<span class="dt">x =</span> iris[<span class="kw">sample</span>(<span class="dt">x =</span> <span class="dv">1</span>:n, <span class="dt">size =</span> n, <span class="dt">replace =</span> F), 
+    ])
+<span class="kw">head</span>(dat)
+<span class="co">#&gt;    Sepal.Length Sepal.Width Petal.Length Petal.Width    Species</span>
+<span class="co">#&gt; 1:          5.1         3.5          1.4         0.2     setosa</span>
+<span class="co">#&gt; 2:          5.2         2.7          3.9         1.4 versicolor</span>
+<span class="co">#&gt; 3:          6.4         2.8          5.6         2.2  virginica</span>
+<span class="co">#&gt; 4:          4.8         3.0          1.4         0.3     setosa</span>
+<span class="co">#&gt; 5:          7.2         3.2          6.0         1.8  virginica</span>
+<span class="co">#&gt; 6:          6.3         3.3          4.7         1.6 versicolor</span></code></pre></div>
+<p>The data records the measurements in centimeters of the lengths and widths of the sepals and petals of sampled irises. The species are setosa, versicolor, and virginica. The sample includes a total of 150 observations, which are split evenly among the species.</p>
+<div id="applications-of-dtwrapper-functions" class="section level3">
+<h3>Applications of DTwrapper functions</h3>
+<p>The DTwrappers package offers the following methods:</p>
+<ul>
+<li><strong>dt.choose.rows</strong>: Extracting a subset of the rows (observationsn or records) of the data.</li>
+<li><strong>dt.choose.cols</strong>: Extracting a subset of the variables (columns of the data).</li>
+<li><strong>dt.first.k.rows</strong>: Extracts the first (up to) k rows in each specified subgroup of a data set.</li>
+<li><strong>dt.last.k.rows</strong>: Extracts the last (up to) k rows in each specified subgroup of a data set.</li>
+<li><strong>dt.count.rows</strong>: Showing how many records are in the data, either overall or in groups.</li>
+<li><strong>dt.define.variable</strong>: Adding a new variable to an existing data.frame.</li>
+<li><strong>dt.remove.variables</strong>: Removing one or more variables from an existing data.frame.</li>
+<li><strong>dt.sort</strong>: Sorting a data.frame based upon the values of specified variables.</li>
+<li><strong>dt.calculate</strong>: Applying other functions in R to one or more variable, either separately or in combination.</li>
+</ul>
+<p>These functions can be called quite simply, but they include many features that can facilitate more complex queries. For instance, dt.calculate can be used for simple calculations of a mean or standard deviation, but these measures can be applied on specified subsets of the data, performed separately in subgroups, and scaled to simultaneous calculations on a large number of variables.</p>
+<p>The following section will provide examples of these methods.</p>
+</div>
+<div id="function-dt.choose.rows" class="section level3">
+<h3>1) Function: dt.choose.rows</h3>
+<p>Reducing the data by extracting a subset of relevant rows is a fundamental step in many analyses. The dt.choose.rows method is built as a wrapper function of data.table's filtering method (the i step). A series of logical tests on variables within the data may be specified. Options also exist to return a data.table coding statement (result = &quot;code&quot;) for educational purposes or both the result and the code together (result = &quot;all&quot;).</p>
+<div id="example-1a-choose-the-first-3-rows-of-the-dataset." class="section level5">
+<h5>Example 1a) Choose the first 3 rows of the dataset.</h5>
+<p>We can extract the first 3 rows by providing the name of the data (dt.name) and a filter (1:3 as a numeric variable).</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dt.choose.rows</span>(<span class="dt">dt.name =</span> <span class="st">&quot;dat&quot;</span>, <span class="dt">the.filter =</span> <span class="dv">1</span>:<span class="dv">3</span>)
+<span class="co">#&gt;    Sepal.Length Sepal.Width Petal.Length Petal.Width    Species</span>
+<span class="co">#&gt; 1:          5.1         3.5          1.4         0.2     setosa</span>
+<span class="co">#&gt; 2:          5.2         2.7          3.9         1.4 versicolor</span>
+<span class="co">#&gt; 3:          6.4         2.8          5.6         2.2  virginica</span></code></pre></div>
+<p>We can also set the value of the.filter using a character version &quot;1:3&quot;:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dt.choose.rows</span>(<span class="dt">dt.name =</span> <span class="st">&quot;dat&quot;</span>, <span class="dt">the.filter =</span> <span class="st">&quot;1:3&quot;</span>)
+<span class="co">#&gt;    Sepal.Length Sepal.Width Petal.Length Petal.Width    Species</span>
+<span class="co">#&gt; 1:          5.1         3.5          1.4         0.2     setosa</span>
+<span class="co">#&gt; 2:          5.2         2.7          3.9         1.4 versicolor</span>
+<span class="co">#&gt; 3:          6.4         2.8          5.6         2.2  virginica</span></code></pre></div>
+<p>We can then display the code by setting return.as to &quot;code&quot;:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dt.choose.rows</span>(<span class="dt">dt.name =</span> <span class="st">&quot;dat&quot;</span>, <span class="dt">the.filter =</span> <span class="st">&quot;1:3&quot;</span>, <span class="dt">return.as =</span> <span class="st">&quot;code&quot;</span>)
+<span class="co">#&gt; [1] &quot;dat[1:3,]&quot;</span></code></pre></div>
+<p>Setting return.as = &quot;all&quot; will return a list (object) with elements for the result and the code:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dt.choose.rows</span>(<span class="dt">dt.name =</span> <span class="st">&quot;dat&quot;</span>, <span class="dt">the.filter =</span> <span class="st">&quot;1:3&quot;</span>, <span class="dt">return.as =</span> <span class="st">&quot;all&quot;</span>)
+<span class="co">#&gt; $result</span>
+<span class="co">#&gt;    Sepal.Length Sepal.Width Petal.Length Petal.Width    Species</span>
+<span class="co">#&gt; 1:          5.1         3.5          1.4         0.2     setosa</span>
+<span class="co">#&gt; 2:          5.2         2.7          3.9         1.4 versicolor</span>
+<span class="co">#&gt; 3:          6.4         2.8          5.6         2.2  virginica</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $code</span>
+<span class="co">#&gt; [1] &quot;dat[1:3,]&quot;</span></code></pre></div>
+</div>
+<div id="example-1b-choose-rows-based-on-a-logical-test" class="section level5">
+<h5>Example 1b) Choose rows based on a logical test</h5>
+<p>Logical tests may be used to extract rows that meet specified conditions. Here we utilize the.filter by providing a logical test (as a character variable) to extract all of the rows in which the Sepal.Length is less than 4.4:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dt.choose.rows</span>(<span class="dt">dt.name =</span> <span class="st">&quot;dat&quot;</span>, <span class="dt">the.filter =</span> <span class="st">&quot;Sepal.Length &lt; 4.4&quot;</span>, <span class="dt">return.as =</span> <span class="st">&quot;all&quot;</span>)
+<span class="co">#&gt; $result</span>
+<span class="co">#&gt;    Sepal.Length Sepal.Width Petal.Length Petal.Width Species</span>
+<span class="co">#&gt; 1:          4.3           3          1.1         0.1  setosa</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $code</span>
+<span class="co">#&gt; [1] &quot;dat[Sepal.Length &lt; 4.4,]&quot;</span></code></pre></div>
+<p>Values of the.filter may also be specified as expressions:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dt.choose.rows</span>(<span class="dt">dt.name =</span> <span class="st">&quot;dat&quot;</span>, <span class="dt">the.filter =</span> <span class="kw">expression</span>(Sepal.Length &lt;<span class="st"> </span><span class="fl">4.4</span>), <span class="dt">return.as =</span> <span class="st">&quot;all&quot;</span>)
+<span class="co">#&gt; $result</span>
+<span class="co">#&gt;    Sepal.Length Sepal.Width Petal.Length Petal.Width Species</span>
+<span class="co">#&gt; 1:          4.3           3          1.1         0.1  setosa</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $code</span>
+<span class="co">#&gt; [1] &quot;dat[Sepal.Length &lt; 4.4,]&quot;</span></code></pre></div>
+<p>More complex filtering may also be used:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dt.choose.rows</span>(<span class="dt">dt.name =</span> <span class="st">&quot;dat&quot;</span>, <span class="dt">the.filter =</span> <span class="st">&quot;Sepal.Width &gt;= 3 &amp; Sepal.Length &lt; 4.8 &amp; Species == 'setosa'&quot;</span>, 
+    <span class="dt">return.as =</span> <span class="st">&quot;all&quot;</span>)
+<span class="co">#&gt; $result</span>
+<span class="co">#&gt;    Sepal.Length Sepal.Width Petal.Length Petal.Width Species</span>
+<span class="co">#&gt; 1:          4.6         3.1          1.5         0.2  setosa</span>
+<span class="co">#&gt; 2:          4.7         3.2          1.3         0.2  setosa</span>
+<span class="co">#&gt; 3:          4.3         3.0          1.1         0.1  setosa</span>
+<span class="co">#&gt; 4:          4.4         3.2          1.3         0.2  setosa</span>
+<span class="co">#&gt; 5:          4.6         3.6          1.0         0.2  setosa</span>
+<span class="co">#&gt; 6:          4.4         3.0          1.3         0.2  setosa</span>
+<span class="co">#&gt; 7:          4.7         3.2          1.6         0.2  setosa</span>
+<span class="co">#&gt; 8:          4.6         3.2          1.4         0.2  setosa</span>
+<span class="co">#&gt; 9:          4.6         3.4          1.4         0.3  setosa</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $code</span>
+<span class="co">#&gt; [1] &quot;dat[Sepal.Width &gt;= 3 &amp; Sepal.Length &lt; 4.8 &amp; Species == 'setosa',]&quot;</span></code></pre></div>
+<p>Notice that the value 'setosa' was specified within the filter using single quotation marks, while the value of the.filter was wrapped in double quotation marks. This can be switched, but they should not be mixed together. Any confusion around this can be resolved by specifying the.filter as an expression.</p>
+</div>
+</div>
+<div id="function-dt.choose.cols" class="section level3">
+<h3>2) Function: dt.choose.cols</h3>
+<p>This function selects a subset of columns from a data.frame or data.table. It is built as a wrapper function of data.table's selection step (using .SD in the j step while specifying the .SDcols argument). Grouped operations may be used to make these selections of columns and rows in each category. We will illustrate its usage in the examples below.</p>
+<div id="example-2a-choose-all-of-the-columns-for-the-first-5-rows." class="section level5">
+<h5>Example 2a) Choose all of the columns for the first 5 rows.</h5>
+<p>Similar to dt.choose.rows, one can specify the parameters dt.name and the.filter to extract rows from the data. Then the relevant variables (columns) may be selected using the parameter the.variables. Setting this value to &quot;.&quot; (the default) will choose all of the rows.</p>
+<p>We will begin by selecting all of the variables from the first 5 rows:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dt.choose.cols</span>(<span class="dt">dt.name =</span> <span class="st">&quot;dat&quot;</span>, <span class="dt">the.variables =</span> <span class="st">&quot;.&quot;</span>, <span class="dt">the.filter =</span> <span class="st">&quot;1:5&quot;</span>, <span class="dt">return.as =</span> <span class="st">&quot;all&quot;</span>)
+<span class="co">#&gt; $result</span>
+<span class="co">#&gt;    Sepal.Length Sepal.Width Petal.Length Petal.Width    Species</span>
+<span class="co">#&gt; 1:          5.1         3.5          1.4         0.2     setosa</span>
+<span class="co">#&gt; 2:          5.2         2.7          3.9         1.4 versicolor</span>
+<span class="co">#&gt; 3:          6.4         2.8          5.6         2.2  virginica</span>
+<span class="co">#&gt; 4:          4.8         3.0          1.4         0.3     setosa</span>
+<span class="co">#&gt; 5:          7.2         3.2          6.0         1.8  virginica</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $code</span>
+<span class="co">#&gt; [1] &quot;dat[1:5,]&quot;</span></code></pre></div>
+</div>
+<div id="example-2b-select-a-subset-of-the-variables" class="section level5">
+<h5>Example 2b) Select a subset of the variables</h5>
+<p>Setting the.variables to a character vector of variable names can be used to extract a subset of the columns:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dt.choose.cols</span>(<span class="dt">dt.name =</span> <span class="st">&quot;dat&quot;</span>, <span class="dt">the.variables =</span> <span class="kw">c</span>(<span class="st">&quot;Species&quot;</span>, <span class="st">&quot;Sepal.Length&quot;</span>), <span class="dt">the.filter =</span> <span class="st">&quot;1:3&quot;</span>, 
+    <span class="dt">return.as =</span> <span class="st">&quot;all&quot;</span>)
+<span class="co">#&gt; $result</span>
+<span class="co">#&gt;       Species Sepal.Length</span>
+<span class="co">#&gt; 1:     setosa          5.1</span>
+<span class="co">#&gt; 2: versicolor          5.2</span>
+<span class="co">#&gt; 3:  virginica          6.4</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $code</span>
+<span class="co">#&gt; [1] &quot;dat[1:3, .SD, .SDcols = c('Species', 'Sepal.Length')]&quot;</span></code></pre></div>
+<p>Notice that the translation to data.table includes a call to .SD and .SDcols. The structure of dt.choose.cols simplifies this step. Furthermore, its coding translation can help those learning data.table to work more closely with these operators.</p>
+</div>
+<div id="example-2c-grouping-data-and-choosing-a-subset-of-rows-for-each-group" class="section level5">
+<h5>Example 2c) Grouping data and choosing a subset of rows for each group</h5>
+<p>Grouping operations help in building more complex queries. When the grouping.variables parameter is specified, then the data will be partitioned into subgroups. Then, within each subgroup, the first.k parameter can be used to extract the first (up to) k rows of data:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dt.choose.cols</span>(<span class="dt">dt.name =</span> <span class="st">&quot;dat&quot;</span>, <span class="dt">the.variables =</span> <span class="kw">c</span>(<span class="st">&quot;Sepal.Length&quot;</span>, <span class="st">&quot;Sepal.Width&quot;</span>), 
+    <span class="dt">grouping.variables =</span> <span class="st">&quot;Species&quot;</span>, <span class="dt">first.k =</span> <span class="dv">2</span>, <span class="dt">return.as =</span> <span class="st">&quot;all&quot;</span>)
+<span class="co">#&gt; $result</span>
+<span class="co">#&gt;       Species Sepal.Length Sepal.Width</span>
+<span class="co">#&gt; 1:     setosa          5.1         3.5</span>
+<span class="co">#&gt; 2:     setosa          4.8         3.0</span>
+<span class="co">#&gt; 3: versicolor          5.2         2.7</span>
+<span class="co">#&gt; 4: versicolor          6.3         3.3</span>
+<span class="co">#&gt; 5:  virginica          6.4         2.8</span>
+<span class="co">#&gt; 6:  virginica          7.2         3.2</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $code</span>
+<span class="co">#&gt; [1] &quot;dat[, .SD[1:min(.N, 2)], .SDcols = c('Sepal.Length', 'Sepal.Width'), keyby = Species]&quot;</span></code></pre></div>
+<p>This can equivalently be specified using the dt.first.k.rows function:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dt.first.k.rows</span>(<span class="dt">dt.name =</span> <span class="st">&quot;dat&quot;</span>, <span class="dt">k =</span> <span class="dv">2</span>, <span class="dt">the.variables =</span> <span class="kw">c</span>(<span class="st">&quot;Sepal.Length&quot;</span>, <span class="st">&quot;Sepal.Width&quot;</span>), 
+    <span class="dt">grouping.variables =</span> <span class="st">&quot;Species&quot;</span>, <span class="dt">return.as =</span> <span class="st">&quot;all&quot;</span>)
+<span class="co">#&gt; $result</span>
+<span class="co">#&gt;       Species Sepal.Length Sepal.Width</span>
+<span class="co">#&gt; 1:     setosa          5.1         3.5</span>
+<span class="co">#&gt; 2:     setosa          4.8         3.0</span>
+<span class="co">#&gt; 3: versicolor          5.2         2.7</span>
+<span class="co">#&gt; 4: versicolor          6.3         3.3</span>
+<span class="co">#&gt; 5:  virginica          6.4         2.8</span>
+<span class="co">#&gt; 6:  virginica          7.2         3.2</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $code</span>
+<span class="co">#&gt; [1] &quot;dat[, .SD[1:min(.N, 2)], .SDcols = c('Sepal.Length', 'Sepal.Width'), keyby = Species]&quot;</span></code></pre></div>
+<p>Within dt.choose.cols, we can also use last.k to select (up to) the last k rows for each subgroup:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dt.choose.cols</span>(<span class="dt">dt.name =</span> <span class="st">&quot;dat&quot;</span>, <span class="dt">the.variables =</span> <span class="kw">c</span>(<span class="st">&quot;Sepal.Length&quot;</span>, <span class="st">&quot;Sepal.Width&quot;</span>), 
+    <span class="dt">grouping.variables =</span> <span class="st">&quot;Species&quot;</span>, <span class="dt">last.k =</span> <span class="dv">2</span>, <span class="dt">return.as =</span> <span class="st">&quot;all&quot;</span>)
+<span class="co">#&gt; $result</span>
+<span class="co">#&gt;       Species Sepal.Length Sepal.Width</span>
+<span class="co">#&gt; 1:     setosa          5.7         4.4</span>
+<span class="co">#&gt; 2:     setosa          4.4         2.9</span>
+<span class="co">#&gt; 3: versicolor          4.9         2.4</span>
+<span class="co">#&gt; 4: versicolor          6.1         2.9</span>
+<span class="co">#&gt; 5:  virginica          7.1         3.0</span>
+<span class="co">#&gt; 6:  virginica          6.0         2.2</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $code</span>
+<span class="co">#&gt; [1] &quot;dat[, .SD[max(1, .N - 1):.N], .SDcols = c('Sepal.Length', 'Sepal.Width'), keyby = Species]&quot;</span></code></pre></div>
+<p>This can equivalently be calculated with the function dt.last.k.rows:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dt.last.k.rows</span>(<span class="dt">dt.name =</span> <span class="st">&quot;dat&quot;</span>, <span class="dt">k =</span> <span class="dv">2</span>, <span class="dt">the.variables =</span> <span class="kw">c</span>(<span class="st">&quot;Sepal.Length&quot;</span>, <span class="st">&quot;Sepal.Width&quot;</span>), 
+    <span class="dt">grouping.variables =</span> <span class="st">&quot;Species&quot;</span>, <span class="dt">return.as =</span> <span class="st">&quot;all&quot;</span>)
+<span class="co">#&gt; $result</span>
+<span class="co">#&gt;       Species Sepal.Length Sepal.Width</span>
+<span class="co">#&gt; 1:     setosa          5.7         4.4</span>
+<span class="co">#&gt; 2:     setosa          4.4         2.9</span>
+<span class="co">#&gt; 3: versicolor          4.9         2.4</span>
+<span class="co">#&gt; 4: versicolor          6.1         2.9</span>
+<span class="co">#&gt; 5:  virginica          7.1         3.0</span>
+<span class="co">#&gt; 6:  virginica          6.0         2.2</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $code</span>
+<span class="co">#&gt; [1] &quot;dat[, .SD[max(1, .N - 1):.N], .SDcols = c('Sepal.Length', 'Sepal.Width'), keyby = Species]&quot;</span></code></pre></div>
+<p>More generally, a vector of rows to select for each group may also be specified using the row.indices parameter of dt.choose.cols:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dt.choose.cols</span>(<span class="dt">dt.name =</span> <span class="st">&quot;dat&quot;</span>, <span class="dt">the.variables =</span> <span class="kw">c</span>(<span class="st">&quot;Sepal.Length&quot;</span>, <span class="st">&quot;Sepal.Width&quot;</span>), 
+    <span class="dt">grouping.variables =</span> <span class="st">&quot;Species&quot;</span>, <span class="dt">row.indices =</span> <span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">5</span>, <span class="dv">7</span>), <span class="dt">return.as =</span> <span class="st">&quot;all&quot;</span>)
+<span class="co">#&gt; $result</span>
+<span class="co">#&gt;       Species Sepal.Length Sepal.Width</span>
+<span class="co">#&gt; 1:     setosa          4.6         3.1</span>
+<span class="co">#&gt; 2:     setosa          5.7         3.8</span>
+<span class="co">#&gt; 3:     setosa          5.0         3.6</span>
+<span class="co">#&gt; 4: versicolor          6.4         3.2</span>
+<span class="co">#&gt; 5: versicolor          6.6         3.0</span>
+<span class="co">#&gt; 6: versicolor          6.2         2.9</span>
+<span class="co">#&gt; 7:  virginica          6.3         2.9</span>
+<span class="co">#&gt; 8:  virginica          7.4         2.8</span>
+<span class="co">#&gt; 9:  virginica          5.8         2.7</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $code</span>
+<span class="co">#&gt; [1] &quot;dat[, .SD[(c(3, 5, 7))[(c(3, 5, 7)) %in% 1:min(.N, dat[, .N])]], .SDcols = c('Sepal.Length', 'Sepal.Width'), keyby = Species]&quot;</span></code></pre></div>
+<p>The dt.choose.cols method allows the user to 1) reduce the data to a subset, 2) group the data by one or more variables, 3) select columns of data, and 4) provide specialized subsets such as the first k, last k, or selected rows within each group. These operations involve a number of steps that might otherwise be challenging for new analysts to construct. The data.table code is somewhat more compact but requires knowledge of its specialized operators .N, .SD, and .SDcols. Meanwhile, the translated code also allows users to gain familiarity with data.table's methods.</p>
+</div>
+</div>
+<div id="function-dt.count.rows" class="section level3">
+<h3>3) Function: dt.count.rows</h3>
+<p>This function counts the number of qualifying rows in a data.table or data.frame object. It is built as a wrapper function of data.table's counting method (the .N operator). These counts may be comprehensive for the entire table or conducted in groups. The full data can also be filtered for qualifying cases prior to counting the rows.</p>
+<div id="example-3a-counting-the-number-of-rows-in-a-data-set" class="section level5">
+<h5>Example 3a) Counting the Number of Rows in a data set</h5>
+<p>This method will provide a simple count, which is similar to the nrow function:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dt.count.rows</span>(<span class="dt">dt.name =</span> <span class="st">&quot;dat&quot;</span>, <span class="dt">return.as =</span> <span class="st">&quot;all&quot;</span>)
+<span class="co">#&gt; $result</span>
+<span class="co">#&gt; [1] 150</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $code</span>
+<span class="co">#&gt; [1] &quot;dat[, .N]&quot;</span></code></pre></div>
+</div>
+<div id="example-3b-counting-with-filtering" class="section level5">
+<h5>Example 3b) Counting with filtering</h5>
+<p>Counts may also be specified in a subset of extracted rows using the.filter:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dt.count.rows</span>(<span class="dt">dt.name =</span> <span class="st">&quot;dat&quot;</span>, <span class="dt">the.filter =</span> <span class="st">&quot;Species == 'setosa'&quot;</span>, <span class="dt">return.as =</span> <span class="st">&quot;all&quot;</span>)
+<span class="co">#&gt; $result</span>
+<span class="co">#&gt; [1] 50</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $code</span>
+<span class="co">#&gt; [1] &quot;dat[Species == 'setosa', .N]&quot;</span></code></pre></div>
+</div>
+<div id="example-3c-counting-in-groups" class="section level5">
+<h5>Example 3c) Counting in groups</h5>
+<p>Counting can also be performed in subgroups of the data:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dt.count.rows</span>(<span class="dt">dt.name =</span> <span class="st">&quot;dat&quot;</span>, <span class="dt">the.filter =</span> <span class="st">&quot;Petal.Length &gt; 1.7&quot;</span>, <span class="dt">grouping.variables =</span> <span class="st">&quot;Species&quot;</span>, 
+    <span class="dt">return.as =</span> <span class="st">&quot;all&quot;</span>)
+<span class="co">#&gt; $result</span>
+<span class="co">#&gt;       Species  N</span>
+<span class="co">#&gt; 1:     setosa  2</span>
+<span class="co">#&gt; 2: versicolor 50</span>
+<span class="co">#&gt; 3:  virginica 50</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $code</span>
+<span class="co">#&gt; [1] &quot;dat[Petal.Length &gt; 1.7, .N, keyby = Species]&quot;</span></code></pre></div>
+<p>The name of the counting variable (N by default) may also be specified:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dt.count.rows</span>(<span class="dt">dt.name =</span> <span class="st">&quot;dat&quot;</span>, <span class="dt">the.filter =</span> <span class="st">&quot;Petal.Length &gt; 1.7&quot;</span>, <span class="dt">grouping.variables =</span> <span class="st">&quot;Species&quot;</span>, 
+    <span class="dt">count.name =</span> <span class="st">&quot;Total Qualifying Rows&quot;</span>, <span class="dt">return.as =</span> <span class="st">&quot;all&quot;</span>)
+<span class="co">#&gt; $result</span>
+<span class="co">#&gt;       Species Total Qualifying Rows</span>
+<span class="co">#&gt; 1:     setosa                     2</span>
+<span class="co">#&gt; 2: versicolor                    50</span>
+<span class="co">#&gt; 3:  virginica                    50</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $code</span>
+<span class="co">#&gt; [1] &quot;dat[Petal.Length &gt; 1.7, .(`Total Qualifying Rows` = .N), keyby = Species]&quot;</span></code></pre></div>
+</div>
+</div>
+<div id="function-dt.define.variable" class="section level3">
+<h3>4) Function: dt.define.variable</h3>
+<p>This function allows a user to add a new variable to an existing data.frame or data.table. It can also be used to update the values of previously defined variables. It is built as a wrapper function of data.table's method of defining new variables by reference using the := operator. The new values can be stated either through a statement of the calculation or by directly providing a vector of values. These updates can also be performed on a subset of the data by incorporating a filter.</p>
+<div id="example-4a-creating-a-new-variable-by-value" class="section level5">
+<h5>Example 4a) Creating a new variable by value</h5>
+<p>We will now create a new variable called Category with the constant value &quot;Flower: Iris&quot; in all rows of the data.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dt.define.variable</span>(<span class="dt">dt.name =</span> <span class="st">&quot;dat&quot;</span>, <span class="dt">variable.name =</span> <span class="st">&quot;Category&quot;</span>, <span class="dt">the.values =</span> <span class="st">&quot;Flower: Iris&quot;</span>, 
+    <span class="dt">return.as =</span> <span class="st">&quot;all&quot;</span>, <span class="dt">specification =</span> <span class="st">&quot;by.value&quot;</span>)
+<span class="co">#&gt; $result</span>
+<span class="co">#&gt;      Sepal.Length Sepal.Width Petal.Length Petal.Width    Species     Category</span>
+<span class="co">#&gt;   1:          5.1         3.5          1.4         0.2     setosa Flower: Iris</span>
+<span class="co">#&gt;   2:          5.2         2.7          3.9         1.4 versicolor Flower: Iris</span>
+<span class="co">#&gt;   3:          6.4         2.8          5.6         2.2  virginica Flower: Iris</span>
+<span class="co">#&gt;   4:          4.8         3.0          1.4         0.3     setosa Flower: Iris</span>
+<span class="co">#&gt;   5:          7.2         3.2          6.0         1.8  virginica Flower: Iris</span>
+<span class="co">#&gt;  ---                                                                          </span>
+<span class="co">#&gt; 146:          4.9         2.4          3.3         1.0 versicolor Flower: Iris</span>
+<span class="co">#&gt; 147:          6.7         3.0          5.2         2.3  virginica Flower: Iris</span>
+<span class="co">#&gt; 148:          6.1         2.9          4.7         1.4 versicolor Flower: Iris</span>
+<span class="co">#&gt; 149:          7.1         3.0          5.9         2.1  virginica Flower: Iris</span>
+<span class="co">#&gt; 150:          6.0         2.2          5.0         1.5  virginica Flower: Iris</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $code</span>
+<span class="co">#&gt; [1] &quot;dat[, Category := 'Flower: Iris']&quot;</span></code></pre></div>
+<p>Setting specification = 'by.value' allows us to assign specific values to the variable rather than providing calculations.</p>
+</div>
+<div id="example-4b-creating-a-new-variable-with-a-calculated-expression" class="section level5">
+<h5>Example 4b) Creating a new variable with a calculated expression</h5>
+<p>Now we will create a new variable called Max_Sepal_Length_Species. This is meant to convey the maximum value of Sepal Length for each species. We can calculate this by applying the max() function to the Sepal.Length variable while grouping by species. Here we define this new variable using specification = &quot;by.expression&quot; because it calls for a calculation rather than directly supplying the values.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dt.define.variable</span>(<span class="dt">dt.name =</span> <span class="st">&quot;dat&quot;</span>, <span class="dt">variable.name =</span> <span class="st">&quot;Max_Sepal_Length_Species&quot;</span>, <span class="dt">the.values =</span> <span class="st">&quot;max(Sepal.Length)&quot;</span>, 
+    <span class="dt">specification =</span> <span class="st">&quot;by.expression&quot;</span>, <span class="dt">grouping.variables =</span> <span class="st">&quot;Species&quot;</span>, <span class="dt">sortby.group =</span> <span class="ot">TRUE</span>, 
+    <span class="dt">return.as =</span> <span class="st">&quot;all&quot;</span>)
+<span class="co">#&gt; $result</span>
+<span class="co">#&gt;      Sepal.Length Sepal.Width Petal.Length Petal.Width   Species     Category</span>
+<span class="co">#&gt;   1:          5.1         3.5          1.4         0.2    setosa Flower: Iris</span>
+<span class="co">#&gt;   2:          4.8         3.0          1.4         0.3    setosa Flower: Iris</span>
+<span class="co">#&gt;   3:          4.6         3.1          1.5         0.2    setosa Flower: Iris</span>
+<span class="co">#&gt;   4:          5.1         3.8          1.6         0.2    setosa Flower: Iris</span>
+<span class="co">#&gt;   5:          5.7         3.8          1.7         0.3    setosa Flower: Iris</span>
+<span class="co">#&gt;  ---                                                                         </span>
+<span class="co">#&gt; 146:          6.7         3.3          5.7         2.1 virginica Flower: Iris</span>
+<span class="co">#&gt; 147:          5.8         2.7          5.1         1.9 virginica Flower: Iris</span>
+<span class="co">#&gt; 148:          6.7         3.0          5.2         2.3 virginica Flower: Iris</span>
+<span class="co">#&gt; 149:          7.1         3.0          5.9         2.1 virginica Flower: Iris</span>
+<span class="co">#&gt; 150:          6.0         2.2          5.0         1.5 virginica Flower: Iris</span>
+<span class="co">#&gt;      Max_Sepal_Length_Species</span>
+<span class="co">#&gt;   1:                      5.8</span>
+<span class="co">#&gt;   2:                      5.8</span>
+<span class="co">#&gt;   3:                      5.8</span>
+<span class="co">#&gt;   4:                      5.8</span>
+<span class="co">#&gt;   5:                      5.8</span>
+<span class="co">#&gt;  ---                         </span>
+<span class="co">#&gt; 146:                      7.9</span>
+<span class="co">#&gt; 147:                      7.9</span>
+<span class="co">#&gt; 148:                      7.9</span>
+<span class="co">#&gt; 149:                      7.9</span>
+<span class="co">#&gt; 150:                      7.9</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $code</span>
+<span class="co">#&gt; [1] &quot;dat[, Max_Sepal_Length_Species := max(Sepal.Length), keyby = Species]&quot;</span></code></pre></div>
+</div>
+<div id="example-4c-creating-a-new-variable-in-subsets-of-rows" class="section level5">
+<h5>Example 4c) Creating a new variable in subsets of rows</h5>
+<p>It is also possible to define new variables in specified rows by applying an appropriate filter. Here we define a new variable that only applies to the setosa flowers:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dt.define.variable</span>(<span class="dt">dt.name =</span> <span class="st">&quot;dat&quot;</span>, <span class="dt">variable.name =</span> <span class="st">&quot;setosa_sl_below_5&quot;</span>, <span class="dt">the.values =</span> <span class="st">&quot;Sepal.Length &lt; 5&quot;</span>, 
+    <span class="dt">specification =</span> <span class="st">&quot;by.expression&quot;</span>, <span class="dt">the.filter =</span> <span class="st">&quot;Species == 'setosa'&quot;</span>, <span class="dt">return.as =</span> <span class="st">&quot;all&quot;</span>)
+<span class="co">#&gt; $result</span>
+<span class="co">#&gt;      Sepal.Length Sepal.Width Petal.Length Petal.Width   Species     Category</span>
+<span class="co">#&gt;   1:          5.1         3.5          1.4         0.2    setosa Flower: Iris</span>
+<span class="co">#&gt;   2:          4.8         3.0          1.4         0.3    setosa Flower: Iris</span>
+<span class="co">#&gt;   3:          4.6         3.1          1.5         0.2    setosa Flower: Iris</span>
+<span class="co">#&gt;   4:          5.1         3.8          1.6         0.2    setosa Flower: Iris</span>
+<span class="co">#&gt;   5:          5.7         3.8          1.7         0.3    setosa Flower: Iris</span>
+<span class="co">#&gt;  ---                                                                         </span>
+<span class="co">#&gt; 146:          6.7         3.3          5.7         2.1 virginica Flower: Iris</span>
+<span class="co">#&gt; 147:          5.8         2.7          5.1         1.9 virginica Flower: Iris</span>
+<span class="co">#&gt; 148:          6.7         3.0          5.2         2.3 virginica Flower: Iris</span>
+<span class="co">#&gt; 149:          7.1         3.0          5.9         2.1 virginica Flower: Iris</span>
+<span class="co">#&gt; 150:          6.0         2.2          5.0         1.5 virginica Flower: Iris</span>
+<span class="co">#&gt;      Max_Sepal_Length_Species setosa_sl_below_5</span>
+<span class="co">#&gt;   1:                      5.8             FALSE</span>
+<span class="co">#&gt;   2:                      5.8              TRUE</span>
+<span class="co">#&gt;   3:                      5.8              TRUE</span>
+<span class="co">#&gt;   4:                      5.8             FALSE</span>
+<span class="co">#&gt;   5:                      5.8             FALSE</span>
+<span class="co">#&gt;  ---                                           </span>
+<span class="co">#&gt; 146:                      7.9                NA</span>
+<span class="co">#&gt; 147:                      7.9                NA</span>
+<span class="co">#&gt; 148:                      7.9                NA</span>
+<span class="co">#&gt; 149:                      7.9                NA</span>
+<span class="co">#&gt; 150:                      7.9                NA</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $code</span>
+<span class="co">#&gt; [1] &quot;dat[Species == 'setosa', setosa_sl_below_5 := Sepal.Length &lt; 5]&quot;</span></code></pre></div>
+<p>The new values are only supplied in the rows corresponding to setosa flowers. For the other rows of the data, the new variable is set with missing values.</p>
+</div>
+</div>
+<div id="function-dt.remove.variables" class="section level3">
+<h3>5) Function: dt.remove.variables</h3>
+<p>This function is designed to remove columns of data. Note that once a variable is removed, its values cannot be retrieved.</p>
+<div id="example-5-removing-a-variable-from-a-dataset" class="section level5">
+<h5>Example 5) Removing a variable from a dataset</h5>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dt.remove.variables</span>(<span class="dt">dt.name =</span> <span class="st">&quot;dat&quot;</span>, <span class="dt">the.variables =</span> <span class="kw">c</span>(<span class="st">&quot;Category&quot;</span>, <span class="st">&quot;setosa_sl_below_5&quot;</span>), 
+    <span class="dt">return.as =</span> <span class="st">&quot;all&quot;</span>)
+<span class="co">#&gt; $result</span>
+<span class="co">#&gt;      Sepal.Length Sepal.Width Petal.Length Petal.Width   Species</span>
+<span class="co">#&gt;   1:          5.1         3.5          1.4         0.2    setosa</span>
+<span class="co">#&gt;   2:          4.8         3.0          1.4         0.3    setosa</span>
+<span class="co">#&gt;   3:          4.6         3.1          1.5         0.2    setosa</span>
+<span class="co">#&gt;   4:          5.1         3.8          1.6         0.2    setosa</span>
+<span class="co">#&gt;   5:          5.7         3.8          1.7         0.3    setosa</span>
+<span class="co">#&gt;  ---                                                            </span>
+<span class="co">#&gt; 146:          6.7         3.3          5.7         2.1 virginica</span>
+<span class="co">#&gt; 147:          5.8         2.7          5.1         1.9 virginica</span>
+<span class="co">#&gt; 148:          6.7         3.0          5.2         2.3 virginica</span>
+<span class="co">#&gt; 149:          7.1         3.0          5.9         2.1 virginica</span>
+<span class="co">#&gt; 150:          6.0         2.2          5.0         1.5 virginica</span>
+<span class="co">#&gt;      Max_Sepal_Length_Species</span>
+<span class="co">#&gt;   1:                      5.8</span>
+<span class="co">#&gt;   2:                      5.8</span>
+<span class="co">#&gt;   3:                      5.8</span>
+<span class="co">#&gt;   4:                      5.8</span>
+<span class="co">#&gt;   5:                      5.8</span>
+<span class="co">#&gt;  ---                         </span>
+<span class="co">#&gt; 146:                      7.9</span>
+<span class="co">#&gt; 147:                      7.9</span>
+<span class="co">#&gt; 148:                      7.9</span>
+<span class="co">#&gt; 149:                      7.9</span>
+<span class="co">#&gt; 150:                      7.9</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $code</span>
+<span class="co">#&gt; [1] &quot;dat[, c('Category', 'setosa_sl_below_5') := NULL]&quot;</span></code></pre></div>
+<p>Reviewing the translated code, this step is achieved by setting the variables to remove equal to a value of NULL. Note that this operation cannot be performed in subsets of the rows of the data; it removes all measurements of the selected variables. However, dt.define.variable can be used to set specific values to missing (NA) in subsets if that is sufficient.</p>
+</div>
+</div>
+<div id="function-dt.sort" class="section level3">
+<h3>6) Function: dt.sort</h3>
+<p>This function sorts the rows of a data.frame or data.table based on selected columns. It is built as a light wrapper function of data.table's setorderv() function.</p>
+<div id="example-6a-sorting-data-by-increasing-values-of-a-variable" class="section level4">
+<h4>Example 6a) Sorting data by increasing values of a variable</h4>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dt.sort</span>(<span class="dt">dt.name =</span> <span class="st">&quot;dat&quot;</span>, <span class="dt">sorting.variables =</span> <span class="kw">c</span>(<span class="st">&quot;Species&quot;</span>, <span class="st">&quot;Sepal.Length&quot;</span>), <span class="dt">sort.increasing =</span> <span class="ot">TRUE</span>, 
+    <span class="dt">return.as =</span> <span class="st">&quot;all&quot;</span>)
+<span class="co">#&gt; $result</span>
+<span class="co">#&gt;      Sepal.Length Sepal.Width Petal.Length Petal.Width   Species</span>
+<span class="co">#&gt;   1:          4.3         3.0          1.1         0.1    setosa</span>
+<span class="co">#&gt;   2:          4.4         3.2          1.3         0.2    setosa</span>
+<span class="co">#&gt;   3:          4.4         3.0          1.3         0.2    setosa</span>
+<span class="co">#&gt;   4:          4.4         2.9          1.4         0.2    setosa</span>
+<span class="co">#&gt;   5:          4.5         2.3          1.3         0.3    setosa</span>
+<span class="co">#&gt;  ---                                                            </span>
+<span class="co">#&gt; 146:          7.7         3.8          6.7         2.2 virginica</span>
+<span class="co">#&gt; 147:          7.7         2.6          6.9         2.3 virginica</span>
+<span class="co">#&gt; 148:          7.7         2.8          6.7         2.0 virginica</span>
+<span class="co">#&gt; 149:          7.7         3.0          6.1         2.3 virginica</span>
+<span class="co">#&gt; 150:          7.9         3.8          6.4         2.0 virginica</span>
+<span class="co">#&gt;      Max_Sepal_Length_Species</span>
+<span class="co">#&gt;   1:                      5.8</span>
+<span class="co">#&gt;   2:                      5.8</span>
+<span class="co">#&gt;   3:                      5.8</span>
+<span class="co">#&gt;   4:                      5.8</span>
+<span class="co">#&gt;   5:                      5.8</span>
+<span class="co">#&gt;  ---                         </span>
+<span class="co">#&gt; 146:                      7.9</span>
+<span class="co">#&gt; 147:                      7.9</span>
+<span class="co">#&gt; 148:                      7.9</span>
+<span class="co">#&gt; 149:                      7.9</span>
+<span class="co">#&gt; 150:                      7.9</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $code</span>
+<span class="co">#&gt; [1] &quot;data.table::setorderv(x = dat, cols = c('Species', 'Sepal.Length'), order = 1, na.last = FALSE)&quot;</span></code></pre></div>
+<p>The sorting proceeds in the order of the specified sorting.variables. In the above example, the data are sorted by Species first. Then, within groups of Species, the data are additionally sorted by increasing Sepal.Length.</p>
+</div>
+<div id="example-6b-sorting-data-in-decreasing-order" class="section level4">
+<h4>Example 6b) Sorting data in decreasing order</h4>
+<p>The data can be sorted in decreasing order by specifying sort.increasing = FALSE:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dt.sort</span>(<span class="dt">dt.name =</span> <span class="st">&quot;dat&quot;</span>, <span class="dt">sorting.variables =</span> <span class="kw">c</span>(<span class="st">&quot;Species&quot;</span>, <span class="st">&quot;Sepal.Length&quot;</span>), <span class="dt">sort.increasing =</span> <span class="ot">FALSE</span>, 
+    <span class="dt">return.as =</span> <span class="st">&quot;all&quot;</span>)
+<span class="co">#&gt; $result</span>
+<span class="co">#&gt;      Sepal.Length Sepal.Width Petal.Length Petal.Width   Species</span>
+<span class="co">#&gt;   1:          7.9         3.8          6.4         2.0 virginica</span>
+<span class="co">#&gt;   2:          7.7         3.8          6.7         2.2 virginica</span>
+<span class="co">#&gt;   3:          7.7         2.6          6.9         2.3 virginica</span>
+<span class="co">#&gt;   4:          7.7         2.8          6.7         2.0 virginica</span>
+<span class="co">#&gt;   5:          7.7         3.0          6.1         2.3 virginica</span>
+<span class="co">#&gt;  ---                                                            </span>
+<span class="co">#&gt; 146:          4.5         2.3          1.3         0.3    setosa</span>
+<span class="co">#&gt; 147:          4.4         3.2          1.3         0.2    setosa</span>
+<span class="co">#&gt; 148:          4.4         3.0          1.3         0.2    setosa</span>
+<span class="co">#&gt; 149:          4.4         2.9          1.4         0.2    setosa</span>
+<span class="co">#&gt; 150:          4.3         3.0          1.1         0.1    setosa</span>
+<span class="co">#&gt;      Max_Sepal_Length_Species</span>
+<span class="co">#&gt;   1:                      7.9</span>
+<span class="co">#&gt;   2:                      7.9</span>
+<span class="co">#&gt;   3:                      7.9</span>
+<span class="co">#&gt;   4:                      7.9</span>
+<span class="co">#&gt;   5:                      7.9</span>
+<span class="co">#&gt;  ---                         </span>
+<span class="co">#&gt; 146:                      5.8</span>
+<span class="co">#&gt; 147:                      5.8</span>
+<span class="co">#&gt; 148:                      5.8</span>
+<span class="co">#&gt; 149:                      5.8</span>
+<span class="co">#&gt; 150:                      5.8</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $code</span>
+<span class="co">#&gt; [1] &quot;data.table::setorderv(x = dat, cols = c('Species', 'Sepal.Length'), order = -1, na.last = FALSE)&quot;</span></code></pre></div>
+</div>
+<div id="example-6c-selecting-the-ordering-of-each-sorting-variable." class="section level4">
+<h4>Example 6c) Selecting the ordering of each sorting variable.</h4>
+<p>Each sorting variable's ordering can be specified as either increasing (TRUE) or decreasing (FALSE):</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dt.sort</span>(<span class="dt">dt.name =</span> <span class="st">&quot;dat&quot;</span>, <span class="dt">sorting.variables =</span> <span class="kw">c</span>(<span class="st">&quot;Species&quot;</span>, <span class="st">&quot;Sepal.Length&quot;</span>), <span class="dt">sort.increasing =</span> <span class="kw">c</span>(T, 
+    F), <span class="dt">return.as =</span> <span class="st">&quot;all&quot;</span>)
+<span class="co">#&gt; $result</span>
+<span class="co">#&gt;      Sepal.Length Sepal.Width Petal.Length Petal.Width   Species</span>
+<span class="co">#&gt;   1:          5.8         4.0          1.2         0.2    setosa</span>
+<span class="co">#&gt;   2:          5.7         3.8          1.7         0.3    setosa</span>
+<span class="co">#&gt;   3:          5.7         4.4          1.5         0.4    setosa</span>
+<span class="co">#&gt;   4:          5.5         3.5          1.3         0.2    setosa</span>
+<span class="co">#&gt;   5:          5.5         4.2          1.4         0.2    setosa</span>
+<span class="co">#&gt;  ---                                                            </span>
+<span class="co">#&gt; 146:          5.8         2.8          5.1         2.4 virginica</span>
+<span class="co">#&gt; 147:          5.8         2.7          5.1         1.9 virginica</span>
+<span class="co">#&gt; 148:          5.7         2.5          5.0         2.0 virginica</span>
+<span class="co">#&gt; 149:          5.6         2.8          4.9         2.0 virginica</span>
+<span class="co">#&gt; 150:          4.9         2.5          4.5         1.7 virginica</span>
+<span class="co">#&gt;      Max_Sepal_Length_Species</span>
+<span class="co">#&gt;   1:                      5.8</span>
+<span class="co">#&gt;   2:                      5.8</span>
+<span class="co">#&gt;   3:                      5.8</span>
+<span class="co">#&gt;   4:                      5.8</span>
+<span class="co">#&gt;   5:                      5.8</span>
+<span class="co">#&gt;  ---                         </span>
+<span class="co">#&gt; 146:                      7.9</span>
+<span class="co">#&gt; 147:                      7.9</span>
+<span class="co">#&gt; 148:                      7.9</span>
+<span class="co">#&gt; 149:                      7.9</span>
+<span class="co">#&gt; 150:                      7.9</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $code</span>
+<span class="co">#&gt; [1] &quot;data.table::setorderv(x = dat, cols = c('Species', 'Sepal.Length'), order = c(1, -1), na.last = FALSE)&quot;</span></code></pre></div>
+</div>
+</div>
+<div id="function-dt.calculate" class="section level3">
+<h3>7) Function: dt.calculate</h3>
+<p>The prior operations of selecting rows or columns, filtering the data, counting the number of rows, defining or removing variables, and sorting the data provide helpful tools. However, most analyses of data rely upon some form of calculation. This may apply to a single variable or be repeated across many variables. Considerations of filtering and grouping variables may also apply. The dt.calculate function is designed to facilitate calculations using additional methods in R to one or more variables of the data.</p>
+<div id="example-7a-applying-one-function-to-one-variable" class="section level5">
+<h5>Example 7a) Applying One Function to One Variable</h5>
+<p>Here we demonstrate a calculation of the mean of the Sepal.Length:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dt.calculate</span>(<span class="dt">dt.name =</span> <span class="st">&quot;dat&quot;</span>, <span class="dt">the.functions =</span> <span class="st">&quot;mean&quot;</span>, <span class="dt">the.variables =</span> <span class="st">&quot;Sepal.Length&quot;</span>, 
+    <span class="dt">return.as =</span> <span class="st">&quot;all&quot;</span>)
+<span class="co">#&gt; $result</span>
+<span class="co">#&gt;        variable     mean</span>
+<span class="co">#&gt; 1: Sepal.Length 5.843333</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $code</span>
+<span class="co">#&gt; [1] &quot;dat[, .(variable = 'Sepal.Length', mean = mean(Sepal.Length))]&quot;</span></code></pre></div>
+</div>
+<div id="example-7b-applying-multiple-functions-to-one-variable" class="section level5">
+<h5>Example 7b) Applying multiple functions to one variable</h5>
+<p>This can be extended to multiple functions:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dt.calculate</span>(<span class="dt">dt.name =</span> <span class="st">&quot;dat&quot;</span>, <span class="dt">the.functions =</span> <span class="kw">c</span>(<span class="st">&quot;mean&quot;</span>, <span class="st">&quot;median&quot;</span>, <span class="st">&quot;sd&quot;</span>), <span class="dt">the.variables =</span> <span class="st">&quot;Sepal.Length&quot;</span>, 
+    <span class="dt">return.as =</span> <span class="st">&quot;all&quot;</span>)
+<span class="co">#&gt; $result</span>
+<span class="co">#&gt;        variable     mean median        sd</span>
+<span class="co">#&gt; 1: Sepal.Length 5.843333    5.8 0.8280661</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $code</span>
+<span class="co">#&gt; [1] &quot;dat[, .(variable = 'Sepal.Length', mean = mean(Sepal.Length), median = median(Sepal.Length), sd = sd(Sepal.Length))]&quot;</span></code></pre></div>
+</div>
+<div id="example-7c-adding-parameters-to-the-functions" class="section level5">
+<h5>Example 7c) Adding parameters to the functions</h5>
+<p>It is also possible to supply additional arguments to the functions by specifying the other.params variable:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dt.calculate</span>(<span class="dt">dt.name =</span> <span class="st">&quot;dat&quot;</span>, <span class="dt">the.functions =</span> <span class="kw">c</span>(<span class="st">&quot;mean&quot;</span>, <span class="st">&quot;median&quot;</span>, <span class="st">&quot;sd&quot;</span>), <span class="dt">the.variables =</span> <span class="st">&quot;Sepal.Length&quot;</span>, 
+    <span class="dt">other.params =</span> <span class="st">&quot;na.rm = T&quot;</span>, <span class="dt">return.as =</span> <span class="st">&quot;all&quot;</span>)
+<span class="co">#&gt; $result</span>
+<span class="co">#&gt;        variable     mean median        sd</span>
+<span class="co">#&gt; 1: Sepal.Length 5.843333    5.8 0.8280661</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $code</span>
+<span class="co">#&gt; [1] &quot;dat[, .(variable = 'Sepal.Length', mean = mean(Sepal.Length, na.rm = T), median = median(Sepal.Length, na.rm = T), sd = sd(Sepal.Length, na.rm = T))]&quot;</span></code></pre></div>
+<p>Note that when multiple functions are specified, the supplied values of other.params must be compatible with all of these functions. So, for instance, setting na.rm = T can apply to the mean, median, and standard deviation functions, but it would not necessarily work with other functions -- e.g. nrow() -- that might be considered.</p>
+</div>
+<div id="example-7d-dt.calculate-with-filtering-and-grouping-statements" class="section level5">
+<h5>Example 7d) dt.calculate with filtering and grouping statements</h5>
+<p>Calculations can be extended to allow for filtering and grouping:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dt.calculate</span>(<span class="dt">dt.name =</span> <span class="st">&quot;dat&quot;</span>, <span class="dt">the.functions =</span> <span class="kw">c</span>(<span class="st">&quot;mean&quot;</span>, <span class="st">&quot;median&quot;</span>, <span class="st">&quot;sd&quot;</span>), <span class="dt">the.variables =</span> <span class="st">&quot;Sepal.Length&quot;</span>, 
+    <span class="dt">the.filter =</span> <span class="st">&quot;Sepal.Length &gt; 3.5&quot;</span>, <span class="dt">grouping.variables =</span> <span class="st">&quot;Species&quot;</span>, <span class="dt">return.as =</span> <span class="st">&quot;all&quot;</span>)
+<span class="co">#&gt; $result</span>
+<span class="co">#&gt;       Species     variable  mean median        sd</span>
+<span class="co">#&gt; 1:     setosa Sepal.Length 5.006    5.0 0.3524897</span>
+<span class="co">#&gt; 2: versicolor Sepal.Length 5.936    5.9 0.5161711</span>
+<span class="co">#&gt; 3:  virginica Sepal.Length 6.588    6.5 0.6358796</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $code</span>
+<span class="co">#&gt; [1] &quot;dat[Sepal.Length &gt; 3.5, .(variable = 'Sepal.Length', mean = mean(Sepal.Length), median = median(Sepal.Length), sd = sd(Sepal.Length)), keyby = Species]&quot;</span></code></pre></div>
+</div>
+<div id="example-7e-applying-multiple-functions-to-multiple-variables" class="section level5">
+<h5>Example 7e) Applying multiple functions to multiple variables</h5>
+<p>This can also be scaled to include more than one variable:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dt.calculate</span>(<span class="dt">dt.name =</span> <span class="st">&quot;dat&quot;</span>, <span class="dt">the.functions =</span> <span class="kw">c</span>(<span class="st">&quot;mean&quot;</span>, <span class="st">&quot;median&quot;</span>, <span class="st">&quot;sd&quot;</span>), <span class="dt">the.variables =</span> <span class="kw">c</span>(<span class="st">&quot;Sepal.Length&quot;</span>, 
+    <span class="st">&quot;Sepal.Width&quot;</span>, <span class="st">&quot;Petal.Length&quot;</span>, <span class="st">&quot;Petal.Width&quot;</span>), <span class="dt">the.filter =</span> <span class="st">&quot;Sepal.Length &gt; 3.5&quot;</span>, 
+    <span class="dt">grouping.variables =</span> <span class="st">&quot;Species&quot;</span>, <span class="dt">return.as =</span> <span class="st">&quot;all&quot;</span>)
+<span class="co">#&gt; $result</span>
+<span class="co">#&gt;        Species     variable  mean median        sd</span>
+<span class="co">#&gt;  1:     setosa Sepal.Length 5.006      5 0.3524897</span>
+<span class="co">#&gt;  2:     setosa  Sepal.Width 3.428    3.4 0.3790644</span>
+<span class="co">#&gt;  3:     setosa Petal.Length 1.462    1.5  0.173664</span>
+<span class="co">#&gt;  4:     setosa  Petal.Width 0.246    0.2 0.1053856</span>
+<span class="co">#&gt;  5: versicolor Sepal.Length 5.936    5.9 0.5161711</span>
+<span class="co">#&gt;  6: versicolor  Sepal.Width  2.77    2.8 0.3137983</span>
+<span class="co">#&gt;  7: versicolor Petal.Length  4.26   4.35  0.469911</span>
+<span class="co">#&gt;  8: versicolor  Petal.Width 1.326    1.3 0.1977527</span>
+<span class="co">#&gt;  9:  virginica Sepal.Length 6.588    6.5 0.6358796</span>
+<span class="co">#&gt; 10:  virginica  Sepal.Width 2.974      3 0.3224966</span>
+<span class="co">#&gt; 11:  virginica Petal.Length 5.552   5.55 0.5518947</span>
+<span class="co">#&gt; 12:  virginica  Petal.Width 2.026      2 0.2746501</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $code</span>
+<span class="co">#&gt; [1] &quot;dat[Sepal.Length &gt; 3.5, .(variable = c('Sepal.Length', 'Sepal.Width', 'Petal.Length', 'Petal.Width'), mean = lapply(X = .SD, FUN = 'mean'), median = lapply(X = .SD, FUN = 'median'), sd = lapply(X = .SD, FUN = 'sd')), .SDcols = c('Sepal.Length', 'Sepal.Width', 'Petal.Length', 'Petal.Width'), keyby = Species]&quot;</span></code></pre></div>
+</div>
+<div id="example-7f-tables-in-wide-format" class="section level5">
+<h5>Example 7f) Tables in wide format</h5>
+<p>The table.format variable can be used to shift the results to wide format:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># dt.calculate(dt.name = 'dat', the.functions = c('mean', 'median', 'sd'),</span>
+<span class="co"># the.variables = c('Sepal.Length', 'Sepal.Width', 'Petal.Length',</span>
+<span class="co"># 'Petal.Width'), the.filter = 'Sepal.Length &gt; 3.5', grouping.variables =</span>
+<span class="co"># 'Species', table.format = 'wide', return.as = 'all')</span></code></pre></div>
+<p>When wide formats are used for calculations on multiple variables and functions, then the results create columns with names of the form variable_function. Additionally, to create tables in wide format, the translated data.table statement does not use multiple lapply statements but rather enumerates each function as applied to each variable.</p>
+</div>
+<div id="example-7g-customized-functions" class="section level5">
+<h5>Example 7g) Customized functions</h5>
+<p>Whether the function to apply exists as a base method, from a loaded package, or is a customized function defined by the user, dt.calculate is able to make use of the method. Here we create a simple function called <code>triple mean</code> that calculates 3 times the mean value:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="st">`</span><span class="dt">triple mean</span><span class="st">`</span> &lt;-<span class="st"> </span>function(x, <span class="dt">na.rm =</span> T) {
+    <span class="kw">return</span>(<span class="dv">3</span> *<span class="st"> </span><span class="kw">mean</span>(<span class="dt">x =</span> x, <span class="dt">na.rm =</span> na.rm))
+}
+
+<span class="kw">dt.calculate</span>(<span class="dt">dt.name =</span> <span class="st">&quot;dat&quot;</span>, <span class="dt">the.variables =</span> <span class="kw">c</span>(<span class="st">&quot;Sepal.Length&quot;</span>, <span class="st">&quot;Sepal.Width&quot;</span>), <span class="dt">the.functions =</span> <span class="kw">c</span>(<span class="st">&quot;mean&quot;</span>, 
+    <span class="st">&quot;sd&quot;</span>, <span class="st">&quot;triple mean&quot;</span>), <span class="dt">grouping.variables =</span> <span class="st">&quot;Species&quot;</span>, <span class="dt">table.format =</span> <span class="st">&quot;long&quot;</span>, 
+    <span class="dt">return.as =</span> <span class="st">&quot;all&quot;</span>)
+<span class="co">#&gt; $result</span>
+<span class="co">#&gt;       Species     variable  mean        sd triple mean</span>
+<span class="co">#&gt; 1:     setosa Sepal.Length 5.006 0.3524897      15.018</span>
+<span class="co">#&gt; 2:     setosa  Sepal.Width 3.428 0.3790644      10.284</span>
+<span class="co">#&gt; 3: versicolor Sepal.Length 5.936 0.5161711      17.808</span>
+<span class="co">#&gt; 4: versicolor  Sepal.Width  2.77 0.3137983        8.31</span>
+<span class="co">#&gt; 5:  virginica Sepal.Length 6.588 0.6358796      19.764</span>
+<span class="co">#&gt; 6:  virginica  Sepal.Width 2.974 0.3224966       8.922</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $code</span>
+<span class="co">#&gt; [1] &quot;dat[, .(variable = c('Sepal.Length', 'Sepal.Width'), mean = lapply(X = .SD, FUN = 'mean'), sd = lapply(X = .SD, FUN = 'sd'), `triple mean` = lapply(X = .SD, FUN = 'triple mean')), .SDcols = c('Sepal.Length', 'Sepal.Width'), keyby = Species]&quot;</span></code></pre></div>
+</div>
+<div id="example-7h-functions-of-multiple-variables" class="section level5">
+<h5>Example 7h) Functions of multiple variables</h5>
+<p>The examples of dt.calculate provided so far are meant to apply to individual variables. Calculating the mean or the standard deviation is separately applied to each variable. However, some functions -- e.g. rowSums or linear regression -- are meant to apply to multiple variables with a single calculation. These can be incorporated into dt.calculate by specifying individual.variables = FALSE. Here we will review a few examples of these methods.</p>
+<p>First, we will calculate the row sums of the numeric variables for the first 5 rows:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dt.calculate</span>(<span class="dt">dt.name =</span> <span class="st">&quot;dat&quot;</span>, <span class="dt">the.functions =</span> <span class="st">&quot;rowSums&quot;</span>, <span class="dt">the.variables =</span> <span class="kw">c</span>(<span class="st">&quot;Sepal.Length&quot;</span>, 
+    <span class="st">&quot;Sepal.Width&quot;</span>, <span class="st">&quot;Petal.Length&quot;</span>, <span class="st">&quot;Petal.Width&quot;</span>), <span class="dt">the.filter =</span> <span class="dv">1</span>:<span class="dv">5</span>, <span class="dt">individual.variables =</span> <span class="ot">FALSE</span>, 
+    <span class="dt">return.as =</span> <span class="st">&quot;all&quot;</span>)
+<span class="co">#&gt; $result</span>
+<span class="co">#&gt;    rowSums</span>
+<span class="co">#&gt; 1:    11.2</span>
+<span class="co">#&gt; 2:    11.5</span>
+<span class="co">#&gt; 3:    12.0</span>
+<span class="co">#&gt; 4:    10.5</span>
+<span class="co">#&gt; 5:    11.3</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $code</span>
+<span class="co">#&gt; [1] &quot;dat[1:5, .(rowSums = rowSums(.SD)), .SDcols = c('Sepal.Length', 'Sepal.Width', 'Petal.Length', 'Petal.Width')]&quot;</span></code></pre></div>
+</div>
+<div id="example-7i-linear-regression-in-subgroups" class="section level5">
+<h5>Example 7i) Linear regression in subgroups</h5>
+<p>Here we will construct an example of extracting the table of estimated coefficients from a linear regression that is separately performed in each species. To do so, we will first define a customized extraction function:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">get.lm.coefs &lt;-<span class="st"> </span>function(data, formula) {
+    <span class="kw">require</span>(data.table)
+    mod &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">formula =</span> formula, <span class="dt">data =</span> data)
+    the.coefs &lt;-<span class="st"> </span><span class="kw">as.data.table</span>(<span class="dt">x =</span> <span class="kw">summary</span>(mod)$coefficients, <span class="dt">keep.rownames =</span> <span class="ot">TRUE</span>)
+    <span class="kw">setnames</span>(<span class="dt">x =</span> the.coefs, <span class="dt">old =</span> <span class="st">&quot;rn&quot;</span>, <span class="dt">new =</span> <span class="st">&quot;Variable&quot;</span>)
+    <span class="kw">return</span>(the.coefs)
+}</code></pre></div>
+<p>Then we will apply this function to a linear regression of Sepal.Length in terms of the other numeric variables, calculated separately for each species:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## linear regression
+<span class="kw">dt.calculate</span>(<span class="dt">dt.name =</span> <span class="st">&quot;dat&quot;</span>, <span class="dt">the.functions =</span> <span class="st">&quot;get.lm.coefs&quot;</span>, <span class="dt">grouping.variables =</span> <span class="st">&quot;Species&quot;</span>, 
+    <span class="dt">other.params =</span> <span class="st">&quot;formula = Sepal.Length ~ Sepal.Width + Petal.Length + Petal.Width&quot;</span>, 
+    <span class="dt">return.as =</span> <span class="st">&quot;all&quot;</span>, <span class="dt">individual.variables =</span> F, <span class="dt">add.function.name =</span> F)
+<span class="co">#&gt; Loading required package: data.table</span>
+<span class="co">#&gt; Warning: package 'data.table' was built under R version 3.6.2</span>
+<span class="co">#&gt; $result</span>
+<span class="co">#&gt;        Species     Variable   Estimate Std. Error    t value     Pr(&gt;|t|)</span>
+<span class="co">#&gt;  1:     setosa  (Intercept)  2.3518898 0.39286751  5.9864707 3.034183e-07</span>
+<span class="co">#&gt;  2:     setosa  Sepal.Width  0.6548350 0.09244742  7.0833236 6.834434e-09</span>
+<span class="co">#&gt;  3:     setosa Petal.Length  0.2375602 0.20801921  1.1420107 2.593594e-01</span>
+<span class="co">#&gt;  4:     setosa  Petal.Width  0.2521257 0.34686362  0.7268727 4.709870e-01</span>
+<span class="co">#&gt;  5: versicolor  (Intercept)  1.8955395 0.50705524  3.7383295 5.112246e-04</span>
+<span class="co">#&gt;  6: versicolor  Sepal.Width  0.3868576 0.20454490  1.8913091 6.488965e-02</span>
+<span class="co">#&gt;  7: versicolor Petal.Length  0.9083370 0.16543248  5.4906811 1.666695e-06</span>
+<span class="co">#&gt;  8: versicolor  Petal.Width -0.6792238 0.43538206 -1.5600639 1.255990e-01</span>
+<span class="co">#&gt;  9:  virginica  (Intercept)  0.6998830 0.53360089  1.3116227 1.961563e-01</span>
+<span class="co">#&gt; 10:  virginica  Sepal.Width  0.3303370 0.17432873  1.8949086 6.439972e-02</span>
+<span class="co">#&gt; 11:  virginica Petal.Length  0.9455356 0.09072204 10.4223360 1.074269e-13</span>
+<span class="co">#&gt; 12:  virginica  Petal.Width -0.1697527 0.19807243 -0.8570233 3.958750e-01</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $code</span>
+<span class="co">#&gt; [1] &quot;dat[, get.lm.coefs(.SD, formula = Sepal.Length ~ Sepal.Width + Petal.Length + Petal.Width), keyby = Species]&quot;</span></code></pre></div>
+</div>
+<div id="conclusion" class="section level4">
+<h4>Conclusion</h4>
+<p>DTwrappers presents a wide range of data processing applications. They are all built with the goal of reducing the requirements to learn computer programming. These methods are not without some degree of syntax. However, these methods are intended to reduce the learning curve needed to perform data analysis. DTwrappers can allow a user to focus on the core analytical problems without the requirement of specialized coding operators or the necessary ordering of multiple functions. For some beginning analysts, the DTwrappers package may help them acclimate to working with data and utilizing more advanced methods. Programmers with experience in other languages can also more easily transfer that knowledge by using DTwrappers.</p>
+<p>The running time complexity of DTwrappers is a function of its translations along with processing the data using data.table's methods. The translation step includes some degree of additional overhead. However, this portion is not tied to the overall sample size of the data. In practice, the running time performance of DTwrappers should not be substantially different from that of data.table, especially at larger sample sizes.</p>
+<p>Additionally, it should be noted that the DTwrappers is intended to serve as a supplement to existing data processing packages rather than as a replacement. Its methods may be beneficial for a subset of R's users. Determining the relative utility of the package is an area of further exploration.</p>
+</div>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
