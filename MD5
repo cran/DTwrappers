@@ -1,9 +1,9 @@
-011c1055981f97a4cbc9a9fdaac3a1bf *DESCRIPTION
+205736e70bdbfc0e2601d58263506c33 *DESCRIPTION
 9e3579070ac222e46f6907abaa20789e *NAMESPACE
 6fa0ba539e2f175ff87d4fa8eeedc24b *R/check.dt.exists.R
 61024cdcbece8c721fdb69b30b0f5e02 *R/check.dt.status.R
 e827b03aa8f7bd20505c15f83b1237b6 *R/create.dt.statement.R
-1410d1050222aeb628fa7522bbf838c0 *R/dt.calculate.R
+203e59ac782233ab66345715b2f73347 *R/dt.calculate.R
 2fbb9b628f3f175c025921f96f4a58d4 *R/dt.choose.rows.dt.choose.cols.dt.count.rows.R
 fe9aa725489e85fc5a519bf9342c2a01 *R/dt.define.variable.R
 ec760f5c013a8d7d2a23bb572621a660 *R/dt.first.k.rows_and_dt.last.k.rows.R

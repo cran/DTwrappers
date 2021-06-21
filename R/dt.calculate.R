@@ -225,7 +225,7 @@ dt.calculate <-
         }
 
         j.statement <-
-          sprintf(".(%s)", the.grid[, paste(eval(command.name), collapse = ", ")])
+          sprintf(".(%s)", the.grid[, paste(get(command.name), collapse = ", ")])
       }
 
     }
